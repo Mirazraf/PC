@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC Build</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --accent-color: #007BFF;
+      --accent-hover: #0056b3;
+      --border-color: #e1e4e8;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+      --table-header: #007BFF;
+      --table-row-hover: #f1f5f9;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #1a1a1a;
+      --bg-secondary: #2d2d2d;
+      --text-primary: #e4e4e7;
+      --text-secondary: #a1a1aa;
+      --accent-color: #3b82f6;
+      --accent-hover: #2563eb;
+      --border-color: #404040;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --table-header: #3b82f6;
+      --table-row-hover: #374151;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: var(--text-primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-toggle {
+      background-color: var(--bg-primary);
+      border: 2px solid var(--border-color);
+      border-radius: 50px;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent-color);
+    }
+
+    .theme-icon {
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle:hover .theme-icon {
+      transform: rotate(20deg);
+    }
+
+    .table-wrapper {
+      background-color: var(--bg-primary);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 40px;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      background-color: var(--table-header);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    tbody tr {
+      transition: background-color 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background-color: var(--table-row-hover);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    td {
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+
+    tr:last-child {
+      font-weight: 700;
+      background-color: var(--bg-secondary);
+    }
+
+    tr:last-child td {
+      font-size: 1.1rem;
+      color: var(--accent-color);
+    }
+
+    a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      padding: 4px 8px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    a:hover {
+      color: var(--accent-hover);
+      background-color: var(--bg-secondary);
+      transform: translateX(2px);
+    }
+
+    .price-cell {
+      font-weight: 600;
+      color: var(--accent-color);
+    }
+
+    .last-updated {
+      background-color: var(--bg-primary);
+      border-left: 4px solid var(--accent-color);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .last-updated-label {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .last-updated-date {
+      color: var(--accent-color);
+      font-weight: 500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 0 10px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .theme-toggle {
+        align-self: flex-start;
+      }
+
+      .last-updated {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+        flex-wrap: wrap;
+      }
+
+      .table-wrapper {
+        border-radius: 8px;
+      }
+
+      th, td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+      }
+
+      th {
+        font-size: 0.75rem;
+      }
+
+      table {
+        min-width: 700px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.3rem;
+      }
+
+      th, td {
+        padding: 10px 6px;
+        font-size: 0.8rem;
+      }
+
+      .theme-toggle {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+    }
+
+    /* Smooth scrollbar */
+    .table-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+      border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><span>🖥️</span>PC Build Summary</h1>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <span class="theme-icon" id="themeIcon">🌙</span>
+        <span id="themeText">Dark Mode</span>
+      </button>
+    </header>
+
+    <div class="last-updated">
+      <span>🕒</span>
+      <span class="last-updated-label">Last Updated:</span>
+      <span class="last-updated-date" contenteditable="true">November 23, 2025 - 21:42 PM</span>
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Description</th>
+              <th>BD Price</th>
+              <th>Chinese Price</th>
+              <th>BD Website</th>
+              <th>Chinese Website</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>CPU</strong></td>
+              <td>AMD Ryzen 7 5700X</td>
+              <td class="price-cell">13,800 Tk/=</td>
+              <td>—</td>
+              <td><a href="https://computermania.com.bd/product/amd-ryzen-7-5700x-processor/" target="_blank">Computer Mania</a></td>
+              <td>—</td>
+            </tr>
+
+            <tr>
+              <td><strong>Motherboard</strong></td>
+              <td>Asus TUF GAMING B550M Plus WIFI II AMD AM4 microATX Motherboard</td>
+              <td class="price-cell">18,600 Tk/=</td>
+              <td class="price-cell">11,880 Tk/=</td>
+              <td><a href="https://www.startech.com.bd/asus-tuf-gaming-b550m-plus-wifi-ii-motherboard" target="_blank">Star Tech</a></td>
+              <td><a href="https://www.alibaba.com/product-detail/New-TUF-GAMING-B550M-PLUS-AM4_1601150008298.html?spm=a2700.accio_thread&request_id=AI_Web_3500010958536_1763908281412&accio_page_id=19ab0dc70ad2e248c291f60b8dfe1c45402cd264c8" target="_blank">Alibaba</a></td>
+            </tr>
+
+            <tr>
+              <td><strong>GPU</strong></td>
+              <td>Gigabyte GeForce RTX 3060 WINDFORCE OC 12GB GDDR6</td>
+              <td class="price-cell">33,900 Tk/=</td>
+              <td class="price-cell">35,518 Tk/=</td>
+              <td><a href="https://techlink.com.bd/product/gigabyte-geforce-rtx-3060-windforce-oc-12gb-gddr6-graphics-card/" target="_blank">Tech Link</a></td>
+              <td><a href="https://www.alibaba.com/product-detail/Best-Price-MSI-RTX-3060-2X_1601074743218.html?spm=a2700.accio_thread&request_id=AI_Web_vq30myodxbzms2yz9o6sg_1763903840426&accio_page_id=19ab0dc70ad2e248c291f60b8dfe1c45402cd264c8" target="_blank">Alibaba</a></td>
+            </tr>
+
+            <tr>
+              <td><strong>RAM</strong></td>
+              <td>CORSAIR VENGEANCE RGB RS 16GB DDR4 3600MHz ×2 (32GB total)</td>
+              <td class="price-cell">12,000 Tk/= (6,000 × 2)</td>
+              <td class="price-cell">12,980 Tk/= (3,245 x 4)</td>
+              <td><a href="https://www.centurycomputer.com.bd/corsair-vengeance-rgb-rs-16gb-ddr4-3600mhz-ram" target="_blank">Century Computer</a></td>
+              <td><a href="https://www.alibaba.com/product-detail/New-RAM-VENGEANCE-LPX-8GB-DDR4_1601202132354.html?spm=a2700.accio_thread&request_id=AI_Web_3500010958536_1763906468182&accio_page_id=19ab0dc70ad2e248c291f60b8dfe1c45402cd264c8" target="_blank">Alibaba</a></td>
+            </tr>
+
+            <tr>
+              <td><strong>SSD</strong></td>
+              <td>Lexar NM790 1TB Gen 4 NVMe M.2 2280</td>
+              <td class="price-cell">11,300 Tk/=</td>
+              <td>—</td>
+              <td><a href="https://www.skyland.com.bd/lexar-nm790-1tb-ssd" target="_blank">Skyland</a></td>
+              <td>—</td>
+            </tr>
+
+            <tr>
+              <td><strong>PSU</strong></td>
+              <td>Antec Cuprum Strike CSK 650W 80+ Bronze</td>
+              <td class="price-cell">5,700 Tk/=</td>
+              <td>—</td>
+              <td><a href="https://vibegaming.com.bd/product/antec-cuprum-strike-csk-650w-80-plus-bronze-power-supply/" target="_blank">Vibe Gaming</a></td>
+              <td>—</td>
+            </tr>
+
+            <tr>
+              <td><strong>CPU Cooler</strong></td>
+              <td>DeepCool AK400 ZERO DARK PLUS CPU Cooler</td>
+              <td class="price-cell">3,800 Tk/=</td>
+              <td>—</td>
+              <td><a href="https://www.startech.com.bd/deepcool-ak400-zero-dark-plus-cpu-cooler" target="_blank">Star Tech</a></td>
+              <td>—</td>
+            </tr>
+
+            <tr>
+              <td><strong>Case</strong></td>
+              <td>Antec C5 BLACK ARGB CONSTELLATION SERIES Mid Tower ATX Case</td>
+              <td class="price-cell">11,900 Tk/=</td>
+              <td>—</td>
+              <td><a href="https://www.ultratech.com.bd/antec-c5-black-argb-constellation-series-case" target="_blank">Ultratech</a></td>
+              <td>—</td>
+            </tr>
+
+            <tr>
+              <td><strong>Monitor</strong></td>
+              <td>Not chosen yet</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+
+            <tr>
+              <td><strong>Audio</strong></td>
+              <td>Not chosen yet</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Total</strong></td>
+              <td></td>
+              <td class="price-cell">1,11,000 TK/=</td>
+              <td>—</td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      <p>💡 Tip: Scroll horizontally on mobile to view all columns</p>
+    </footer>
+  </div>
+
+  <script>
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeButton(currentTheme);
+
+    function toggleTheme() {
+      const theme = document.documentElement.getAttribute('data-theme');
+      const newTheme = theme === 'light' ? 'dark' : 'light';
+      
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeButton(newTheme);
+    }
+
+    function updateThemeButton(theme) {
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+      
+      if (theme === 'dark') {
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Light Mode';
+      } else {
+        themeIcon.textContent = '🌙';
+        themeText.textContent = 'Dark Mode';
+      }
+    }
+
+    // Smooth scroll for table on mobile
+    const tableContainer = document.querySelector('.table-container');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    tableContainer.addEventListener('mousedown', (e) => {
+      isDown = true;
+      tableContainer.style.cursor = 'grabbing';
+      startX = e.pageX - tableContainer.offsetLeft;
+      scrollLeft = tableContainer.scrollLeft;
+    });
+
+    tableContainer.addEventListener('mouseleave', () => {
+      isDown = false;
+      tableContainer.style.cursor = 'default';
+    });
+
+    tableContainer.addEventListener('mouseup', () => {
+      isDown = false;
+      tableContainer.style.cursor = 'default';
+    });
+
+    tableContainer.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - tableContainer.offsetLeft;
+      const walk = (x - startX) * 2;
+      tableContainer.scrollLeft = scrollLeft - walk;
+    });
+  </script>
+</body>
+</html>
